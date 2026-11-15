@@ -13,6 +13,6 @@
     "test": "node --test"
   },
   "proclama": {
-    "updateUrl": "https://raw.githubusercontent.com/sanmiguelyt955/Claude/main/proclama/"
+    "updateUrl": "https://raw.githubusercontent.com/sanmiguelyt955/proclama/main/"
   }
 }

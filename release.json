@@ -9,6 +9,10 @@
   "Instalador para Linux"
  ],
  "files": {
+  ".git": {
+   "sha256": "973104d0a2b309271ac17a778ce36ed87b9a9916b1193ef5f1dcb642106be528",
+   "size": 46
+  },
   ".gitignore": {
    "sha256": "8ad7c156211aead77386755a3eb0d9d13f266ada65389632b24828200fd616c9",
    "size": 20
@@ -26,8 +30,8 @@
    "size": 5067
   },
   "package.json": {
-   "sha256": "55fc8ec775489caca50ad16a6a3a2ccd2b19c742eff2350ae92fe3d9e2e0b6f9",
-   "size": 463
+   "sha256": "fb983f85382ddbd84350c4f901b856ac9dc2122669fd0e31b2aad7eb6bd7f99e",
+   "size": 456
   },
   "public/bibles/index.json": {
    "sha256": "30900221b6981155b1ffc201e9c01553fb08c8bc3be0c7b257796e98f191e16c",
@@ -150,8 +154,8 @@
    "size": 1417586
   },
   "README.md": {
-   "sha256": "100bcc9ba437996904f845fb5aa5581ecda7e692bf99f7c2b972490e6032f5ec",
-   "size": 12282
+   "sha256": "33522e5c4082f6a17689f5a649c74c75b776e1cd4fd92b3de35d84c709bb4f3e",
+   "size": 12370
   },
   "server.js": {
    "sha256": "1bc948d47ad44f573d29f7def4187437c13ca8d4ad8db7a55f696e324facadbb",
