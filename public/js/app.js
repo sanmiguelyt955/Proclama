@@ -432,9 +432,30 @@ function mediaList() {
 
 // ---------- Biblioteca: temas ----------
 let themeScreen = null;
+/**
+ * Sube fotos y videos y crea un tema por cada uno (su fondo es ese archivo). Primero se suben todos: cada subida
+ * recibe la base de datos del servidor, así que los temas se añaden al final, con un solo guardado.
+ */
+async function themesFromMedia(files) {
+  const made = [];
+  for (const file of files) {
+    try {
+      const kind = file.type.startsWith('video/') ? 'video' : file.type.startsWith('image/') ? 'image' : null;
+      if (!kind) throw new Error(`«${file.name}» no es una foto ni un video`);
+      made.push({ kind, name: file.name.replace(/\.[^.]+$/, ''), item: await store.uploadMedia(file) });
+    } catch (err) { toast(err.message); }
+  }
+  const themes = made.map(({ kind, name, item }) => defaultTheme({ name, dim: kind === 'video' ? 25 : 10,
+    bg: { type: kind, color: '#000000', color2: '#000000', src: item.src } }));
+  store.db.themes.push(...themes);
+  if (themes.length) store.saveDb();
+  return themes;
+}
+
 function themesView() {
   themeScreen?.destroy(); themeScreen = null;
   const db = store.db;
+  const addFile = h('input', { type: 'file', accept: 'image/*,video/*', multiple: true, hidden: true });
   let t = db.themes.find(x => x.id === ui.themeId) ?? db.themes[0];
   ui.themeId = t.id;
   const sample = () => ({ ...defaultLive(), pres: { id: 'muestra', slides: [{ text: 'Sublime gracia del Señor,\nque a un infeliz salvó', footer: 'Sublime Gracia · John Newton' }], theme: t } });
@@ -454,6 +475,12 @@ function themesView() {
   const check = (key, label) => h('label', { class: 'check' }, bind(key, h('input', { type: 'checkbox' })), label);
   const opt = (v, l) => h('option', { value: v }, l);
   const mediaOpts = db.media.filter(m => m.kind === t.bg.type);
+  // Cambiar el archivo de fondo subiendo otro, sin ir a Medios
+  const swapIn = h('input', { type: 'file', accept: t.bg.type === 'video' ? 'video/*' : 'image/*', hidden: true, onchange: async (e) => {
+    const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+    try { const item = await store.uploadMedia(f); t.bg.src = item.src; store.saveDb(); toast('Fondo cambiado'); themesView(); }
+    catch (err) { toast(err.message); }
+  } });
   const mon = h('div', { class: 'monitor' });
   const form = h('div', { class: 'tform' },
     mon,
@@ -470,7 +497,9 @@ function themesView() {
     field('Fondo', bind('type', h('select', {}, opt('color', 'Color'), opt('gradient', 'Degradado'), opt('image', 'Imagen'), opt('video', 'Video')), undefined, t.bg)),
     (t.bg.type === 'color' || t.bg.type === 'gradient') && field('Color de fondo', bind('color', h('input', { type: 'color' }), undefined, t.bg)),
     t.bg.type === 'gradient' && field('Segundo color', bind('color2', h('input', { type: 'color' }), undefined, t.bg)),
-    (t.bg.type === 'image' || t.bg.type === 'video') && field('Archivo de fondo', bind('src', h('select', {}, opt('', mediaOpts.length ? '(elige)' : '(añade archivos en Medios)'), mediaOpts.map(m => opt(m.src, m.name))), undefined, t.bg)),
+    (t.bg.type === 'image' || t.bg.type === 'video') && h('div', { class: 'field bgpick' }, h('span', {}, 'Archivo de fondo'),
+      h('div', { class: 'drow' }, bind('src', h('select', {}, opt('', mediaOpts.length ? '(elige uno de Medios)' : '(todavía no hay)'), mediaOpts.map(m => opt(m.src, m.name))), undefined, t.bg),
+        h('button', { onclick: () => swapIn.click() }, icon('plus', 16), t.bg.src ? 'Cambiar archivo…' : 'Subir foto o video…'), swapIn)),
     (t.bg.type === 'image' || t.bg.type === 'video') && field('Oscurecer fondo (%)', num('dim', 0, 90, 5)),
     h('div', { class: 'checks' }, check('bold', 'Negrita'), check('italic', 'Cursiva'), check('upper', 'MAYÚSCULAS'), check('shadow', 'Sombra'), check('footer', 'Pie (título / cita)')),
     h('div', { class: 'wide' },
@@ -486,12 +515,27 @@ function themesView() {
       } }, 'Eliminar')),
   );
   const uses = (x) => [db.settings.songThemeId === x.id && 'canciones', db.settings.bibleThemeId === x.id && 'Biblia', db.settings.textThemeId === x.id && 'textos'].filter(Boolean).join(', ');
+  const rowThemes = db.themes.map(x => {
+    const sub = uses(x) || (x.bg.type === 'video' ? 'Tema de video' : x.bg.type === 'image' ? 'Tema de foto' : ' ');
+    return h('div', { class: 'row' + (x === t ? ' active' : ''), tabindex: '0', onclick: () => { ui.themeId = x.id; themesView(); } },
+      h('span', { class: 'main' }, h('b', { class: 'ell' }, x.name), h('small', { class: 'ell' }, sub)));
+  });
+  const newRow = h('div', { class: 'row', onclick: () => { const n = defaultTheme({ name: 'Tema nuevo' }); db.themes.push(n); ui.themeId = n.id; store.saveDb(); themesView(); } },
+    h('span', { class: 'main muted' }, '＋ Tema nuevo'));
+  const mediaRow = h('div', { class: 'row', onclick: () => addFile.click() },
+    h('span', { class: 'main' }, h('b', {}, icon('image', 16), ' Tema desde foto o video…'), h('small', {}, 'Sube un archivo y se convierte en tema con ese fondo')));
   $('libBody').replaceChildren(h('div', { class: 'themes' },
-    h('div', { class: 'list' },
-      db.themes.map(x => h('div', { class: 'row' + (x === t ? ' active' : ''), tabindex: '0', onclick: () => { ui.themeId = x.id; themesView(); } },
-        h('span', { class: 'main' }, h('b', { class: 'ell' }, x.name), h('small', { class: 'ell' }, uses(x) || ' ')))),
-      h('div', { class: 'row', onclick: () => { const n = defaultTheme({ name: 'Tema nuevo' }); db.themes.push(n); ui.themeId = n.id; store.saveDb(); themesView(); } }, h('span', { class: 'main muted' }, '＋ Tema nuevo'))),
+    h('div', { class: 'list' }, mediaRow, newRow, rowThemes, addFile),
     form));
+  addFile.onchange = async (e) => {
+    const files = [...e.target.files]; e.target.value = '';
+    const themes = await themesFromMedia(files);
+    if (themes.length) {
+      ui.themeId = themes.at(-1).id;
+      toast(themes.length > 1 ? `${themes.length} temas creados` : `Tema «${themes[0].name}» creado`);
+      themesView();
+    }
+  };
   themeScreen = createScreen(mon, { chrome: false, muted: true, lite });
   themeScreen.update(sample());
 }

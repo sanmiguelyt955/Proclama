@@ -1,13 +1,11 @@
 # Instalador de Proclama para Windows
 
-**[⬇ Descargar Proclama-Setup-0.4.0.exe](https://github.com/sanmiguelyt955/Proclama/raw/main/instaladores/Proclama-Setup-0.4.0.exe)** (25 MB, sin ZIP)
+**[⬇ Descargar Proclama-Setup-0.4.1.exe](https://github.com/sanmiguelyt955/proclama/raw/main/instaladores/Proclama-Setup-0.4.1.exe)** (25 MB, sin ZIP)
 
-| Archivo | Sistema | SHA-256 |
-|---|---|---|
-| `Proclama-Setup-0.4.0.exe` | Windows 10 / 11 (64 bits) | `578947d7cf528f1572237dd063c7dc44ce892c28a4062de83e0871610ad52310` |
+SHA-256: `a71c8df10e0905018cbc4b4217e4d9e4a322d7b09cf0e4fe62647d58202382fb`
 
 - Si Windows muestra «Windows protegió su PC», pulsa **Más información → Ejecutar de todas formas** (no está firmado).
 - La primera vez, permite el acceso en **redes privadas** del Firewall para el control remoto.
-- Las versiones nuevas se instalan desde el botón **Actualizar** de la app; este archivo es solo para instalar por primera vez.
+- Las versiones nuevas se instalan desde el botón **Actualizar** de la app; este archivo es solo para la primera instalación.
 
-Linux: `bash tools/install-linux.sh`.
+Linux: `git clone https://github.com/sanmiguelyt955/proclama && bash proclama/tools/install-linux.sh`.

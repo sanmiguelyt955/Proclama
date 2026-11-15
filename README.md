@@ -9,7 +9,7 @@ con código propio y sin dependencias.
 
 ## Instalar en Windows (lo más fácil)
 
-[**⬇ Descargar Proclama-Setup-0.4.0.exe**](https://github.com/sanmiguelyt955/Proclama/raw/main/instaladores/Proclama-Setup-0.4.0.exe) (sin ZIP) y ejecútalo. No pide permisos de
+[**⬇ Descargar Proclama-Setup-0.4.1.exe**](https://github.com/sanmiguelyt955/proclama/raw/main/instaladores/Proclama-Setup-0.4.1.exe) (sin ZIP) y ejecútalo. No pide permisos de
 administrador ni necesita instalar Node: deja un icono **Proclama** en el escritorio y en el menú Inicio.
 
 - Requiere Windows 10 u 11 de 64 bits.
