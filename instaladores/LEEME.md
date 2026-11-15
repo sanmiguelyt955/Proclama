@@ -1,8 +1,8 @@
 # Instalador de Proclama para Windows
 
-**[⬇ Descargar Proclama-Setup-0.4.1.exe](https://github.com/sanmiguelyt955/proclama/raw/main/instaladores/Proclama-Setup-0.4.1.exe)** (25 MB, sin ZIP)
+**[⬇ Descargar Proclama-Setup-0.4.2.exe](https://github.com/sanmiguelyt955/proclama/raw/main/instaladores/Proclama-Setup-0.4.2.exe)** (25 MB, sin ZIP)
 
-SHA-256: `a71c8df10e0905018cbc4b4217e4d9e4a322d7b09cf0e4fe62647d58202382fb`
+SHA-256: `0ccde5837e34ece554aa3ec4dacd026f78ab20a4be1b3e3fae06c207fe63d1d0`
 
 - Si Windows muestra «Windows protegió su PC», pulsa **Más información → Ejecutar de todas formas** (no está firmado).
 - La primera vez, permite el acceso en **redes privadas** del Firewall para el control remoto.
